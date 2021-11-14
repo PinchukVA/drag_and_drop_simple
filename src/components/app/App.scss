@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
+
+.container {
+  max-width: 960px;
+  width: 100%;
+  margin:0px auto;
+
+  .container__title {
+    color: red;
+    font-size: 38px;
+    font-family:'Archivo Black', sans-serif;
+  }
+}
