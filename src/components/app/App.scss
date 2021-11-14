@@ -2,13 +2,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
 
 .container {
-  max-width: 960px;
-  width: 100%;
+  width: 960px;
   margin:0px auto;
-
-  .container__title {
-    color: red;
-    font-size: 38px;
-    font-family:'Archivo Black', sans-serif;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
