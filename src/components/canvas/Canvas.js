@@ -8,13 +8,14 @@ import {
   setItemsAtCanvas,
   setIsDown,
   setDragItem,
+  AddNewItem
 } from '../../redux/actions/Actions';
 
 function Canvas() {
   const canvasRef = useRef();
   const dispatch = useDispatch();
   const appState = useSelector((state) => state.Reducer);
-  const { startMoveCoordinate, itemsAtCanvas, cursorDown, itemToDrag } =
+  const { styleItemToAdd, itemToAddDX, startMoveCoordinate, itemsAtCanvas, cursorDown, itemToDrag } =
     appState;
 
   let width = '700px';
@@ -46,16 +47,39 @@ function Canvas() {
     }
   };
 
-  const handleMouseEnter = (e) => {
-    console.log('handleMouseEnter', e);
-  };
+  const handlerDragOver = (e) => {
+    e.preventDefault()
+  }
 
+  const handlerOnDrop = (e) => {
+    const styleItemToAddCopy = styleItemToAdd
+    const itemToAddDXCopy = itemToAddDX
+    let { offsetX, offsetY } = e.nativeEvent;
+    let dx = null;
+    let dy = null;
+    if (styleItemToAddCopy === 'square'){
+      dx = offsetX - itemToAddDXCopy.x
+      dy = offsetY - itemToAddDXCopy.y
+    }else {
+      dx = offsetX + (35-itemToAddDXCopy.x)
+      dy = offsetY + (35-itemToAddDXCopy.y)
+    }
+    const newItemToCanvas = {
+      x: dx,
+      y: dy,
+      style:styleItemToAddCopy,
+      id:new Date().valueOf()
+    }
+    dispatch(AddNewItem(newItemToCanvas))
+  }
+  
   const handleMouseLeave = (e) => {
     if (cursorDown && itemToDrag !== {}) {
       dispatch(deleteItem());
       dispatch(setIsDown(false));
     }
   };
+
   const handleKeyPress = (e) => {
     if (e.key === 'Delete' && itemToDrag !== {}) {
       dispatch(deleteItem());
@@ -172,11 +196,12 @@ function Canvas() {
         className='canvas_item'
         ref={canvasRef}
         onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onMouseUp={handleMouseUp}
         onMouseDown={handleMouseDown}
         onKeyUp={handleKeyPress}
+        onDragOver={handlerDragOver}
+        onDrop={handlerOnDrop}
         width={width}
         height={height}
       ></canvas>

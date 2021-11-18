@@ -1,11 +1,24 @@
 import React from "react";
+import { useDispatch, useSelector } from 'react-redux';
+
 import './ItemSingle.scss';
+import { setAddItem,setDxItemToAdd } from '../../../redux/actions/Actions';
 
+function ItemSingle({style,onMouseDown}) {
+  const dispatch = useDispatch();
 
-function ItemSingle({style, dragStart}) {
+  const handleDragStart = e =>{
+    let { offsetX, offsetY } = e.nativeEvent
+    let NewDxObj = {
+      x:offsetX,
+      y:offsetY,
+    }
+    dispatch(setDxItemToAdd(NewDxObj))
+    dispatch(setAddItem(style))
+  }
 
   return (
-    <div  draggable onDragStart={dragStart} className={style === 'circle' ? 'item__circle' : 'item__square'} />
+    <div  draggable onDragStart={handleDragStart} onMouseDown={onMouseDown} className={style === 'circle' ? 'item__circle' : 'item__square'} />
   );
 }
 

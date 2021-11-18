@@ -1,6 +1,12 @@
-export const setCursorAtCanvas = data => {
+export const setDxItemToAdd = data => {
   return {
-    type: 'SET_CURSOR_AT_CANVAS',
+    type: 'SET_DX_ITEM_TO_ADD',
+    payload: data
+  }
+}
+export const setAddItem = data => {
+  return {
+    type: 'SET_ADD_ITEM',
     payload: data
   }
 }
@@ -31,5 +37,11 @@ export const setStartMove = data => {
 export const deleteItem = () => {
   return {
     type: 'DELETE_ITEM'
+  }
+}
+export const AddNewItem = data => {
+  return {
+    type: 'ADD_NEW_ITEM',
+    payload: data
   }
 }

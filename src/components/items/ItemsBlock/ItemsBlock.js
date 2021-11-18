@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import './ItemsBlock.scss';
 
 import { ItemSingle } from '../../index';
@@ -7,16 +7,17 @@ import { ItemSingle } from '../../index';
 function ItemsBlock() {
   const appState = useSelector((state) => state.Reducer);
   const { startItems } = appState;
-  const handleDragStart = e =>{
-    console.log(e)
 
+  const handleMouseDown = (e) =>{
+    console.log('handleMouseDown-e',e)
   }
+
   const renderItems = (arr) =>{
     const result = arr.map((item) => (
       < ItemSingle
         key={item.id}
         style={item.style}
-        dragStart={handleDragStart}
+        onMouseDown={handleMouseDown}
       />
     ));
 

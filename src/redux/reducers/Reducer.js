@@ -21,13 +21,13 @@ const initialState = {
     {x:250,y:150,style:'rect',id:'7-rect'},
     {x:250,y:250,style:'circle',id:'8-circle'}
   ],
-  idItemOnDrag:'',
+  styleItemToAdd:'',
   itemToDrag:{},
   startMoveCoordinate:{
     x:0,
     y:0,
   },
-  cursorAtCanvas:false,
+  itemToAddDX:{x:0,y:0},
   cursorAtItem:false,
   cursorDown:false,
 };
@@ -36,8 +36,10 @@ export const Reducer = (state = initialState, action) => {
   console.log('Reducer-initialState', initialState)
   const {payload} = action;
   switch(action.type){
-    case 'SET_CURSOR_AT_CANVAS':
-      return {...state,cursorAtCanvas: payload}
+    case 'SET_ADD_ITEM':
+      return {...state,styleItemToAdd: payload}
+    case 'SET_DX_ITEM_TO_ADD':
+      return {...state,itemToAddDX: payload}
     case 'SET_DRAG_ITEM':
       return {...state,itemToDrag: payload}
     case 'SET_IS_DOWN':
@@ -46,6 +48,8 @@ export const Reducer = (state = initialState, action) => {
       return {...state,itemsAtCanvas: payload}
     case 'SET_START_MOVE':
       return {...state,startMoveCoordinate: payload}
+    case 'ADD_NEW_ITEM':
+      return {...state,itemsAtCanvas: [...state.itemsAtCanvas, payload]}
     case 'DELETE_ITEM':
       return {...state,
         itemsAtCanvas: state.itemsAtCanvas.filter(elem => elem.id !== state.itemToDrag.id),
