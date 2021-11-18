@@ -24,7 +24,7 @@ function Canvas() {
   const handleMouseMove = (e) => {
     if (!cursorDown) return;
 
-    if (cursorDown && itemToDrag !== {}) {
+    if (cursorDown && itemToDrag !== null) {
       let itemsAtCanvasCopy = [...itemsAtCanvas];
       let startMoveCoordinateCopy = startMoveCoordinate;
       let currentDragItem = itemsAtCanvasCopy.find(
@@ -74,14 +74,14 @@ function Canvas() {
   }
   
   const handleMouseLeave = (e) => {
-    if (cursorDown && itemToDrag !== {}) {
+    if (cursorDown && itemToDrag !== null) {
       dispatch(deleteItem());
       dispatch(setIsDown(false));
     }
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Delete' && itemToDrag !== {}) {
+    if (e.key === 'Delete' && itemToDrag !== null) {
       dispatch(deleteItem());
     }
   };
@@ -156,7 +156,7 @@ function Canvas() {
   const drawOneItem = (ctx, obj) => {
     // line width
     ctx.lineWidth = 1;
-    if (obj.id === itemToDrag.id) {
+    if ( itemToDrag !== null && obj.id === itemToDrag.id) {
       // set line width for selected item
       ctx.lineWidth = 5;
     }
@@ -187,6 +187,10 @@ function Canvas() {
     ctx.beginPath();
     drawItems(ctx, itemsAtCanvas);
   }, [itemsAtCanvas, itemToDrag]);
+
+  useEffect(() => {
+    window.localStorage.setItem('itemsAtCanvas', JSON.stringify(itemsAtCanvas));
+  }, [itemsAtCanvas]);
 
   return (
     <div className='canvas_wrapper'>
