@@ -25,7 +25,8 @@ function ItemsBlock() {
 
   return (
     <div className='items__wrapper'>
-      <h2>Items</h2>
+      <h2>Figures</h2>
+      <p>drag figure to canvas</p>
       <div className='items__container'>
         {renderItems(startItems)}
       </div>

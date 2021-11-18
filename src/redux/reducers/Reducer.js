@@ -46,6 +46,11 @@ export const Reducer = (state = initialState, action) => {
       return {...state,itemsAtCanvas: payload}
     case 'SET_START_MOVE':
       return {...state,startMoveCoordinate: payload}
+    case 'DELETE_ITEM':
+      return {...state,
+        itemsAtCanvas: state.itemsAtCanvas.filter(elem => elem.id !== state.itemToDrag.id),
+        itemToDrag:{}
+      }
     default:
       return {...state}
   }

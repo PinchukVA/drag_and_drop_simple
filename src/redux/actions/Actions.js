@@ -28,3 +28,8 @@ export const setStartMove = data => {
     payload: data
   }
 }
+export const deleteItem = () => {
+  return {
+    type: 'DELETE_ITEM'
+  }
+}
