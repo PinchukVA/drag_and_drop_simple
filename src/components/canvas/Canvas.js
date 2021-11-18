@@ -2,39 +2,47 @@ import React, { useRef, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 
 import "./Canvas.scss";
-import { setCursorAtCanvas,setIsDown,setDragItem } from '../../redux/actions/Actions'
+import { setStartMove,setItemsAtCanvas,setIsDown,setDragItem } from '../../redux/actions/Actions'
 
 function Canvas() {
   const canvasRef = useRef();
   const dispatch = useDispatch()
   const appState = useSelector((state) => state.Reducer);
-  const { itemsAtCanvas, cursorDown,itemToDrag } = appState;
+  const {startMoveCoordinate,itemsAtCanvas, cursorDown,itemToDrag } = appState;
 
   let width = '700px'
   let height = '500px'
-  let startX = null;
-  let startY = null;
-
-  const testArray = [
-    {x:50,y:50,style:'circle',id:'1-circle'},
-    {x:150,y:50,style:'rect',id:'2-rect'},
-    {x:250,y:50,style:'rect',id:'3-rect'},
-    {x:50,y:150,style:'circle',id:'4-circle'},
-    {x:50,y:250,style:'rect',id:'5-rect'},
-    {x:50,y:350,style:'circle',id:'6-circle'},
-    {x:250,y:150,style:'rect',id:'7-rect'},
-    {x:250,y:250,style:'circle',id:'8-circle'}
-  ]
 
   const handleMouseMove = (e) =>{
     if (!cursorDown) return;
 
+    if (cursorDown && itemToDrag !=={} ) {
+      let itemsAtCanvasCopy = [...itemsAtCanvas]
+      let startMoveCoordinateCopy =startMoveCoordinate
+      let currentDragItem = itemsAtCanvasCopy.find(elem=>elem.id === itemToDrag.id);
+
+      let moveX = parseInt(e.nativeEvent.offsetX - canvasRef.current.clientLeft);
+      let moveY = parseInt(e.nativeEvent.offsetY - canvasRef.current.clientTop);
+      let dx = moveX - parseInt(startMoveCoordinateCopy.x)
+      let dy = moveY - parseInt(startMoveCoordinateCopy.y)
+
+      startMoveCoordinateCopy.x = moveX
+      startMoveCoordinateCopy.y =moveY
+      currentDragItem.x += dx;
+      currentDragItem.y += dy;
+
+      dispatch(setStartMove(startMoveCoordinateCopy))
+      dispatch(setItemsAtCanvas(itemsAtCanvasCopy))
+    }
+    
   }
 
   const handleMouseEnter = (e) =>{
   }
 
   const handleMouseLeave= (e) =>{
+    dispatch(setIsDown(false))
+    dispatch(setDragItem({}))
   }
 
   const handleMouseUp = (e) =>{
@@ -66,13 +74,23 @@ function Canvas() {
 
   const handleMouseDown = (e) =>{
     let { offsetX, offsetY } = e.nativeEvent
-    startX = parseInt(offsetX - canvasRef.current.clientLeft);
-    startY = parseInt(offsetY- canvasRef.current.clientTop);
-    const testArrayCoppy = [...testArray]
+    let startX = parseInt(offsetX - canvasRef.current.clientLeft);
+    let startY = parseInt(offsetY- canvasRef.current.clientTop);
+    const testArrayCoppy = [...itemsAtCanvas]
     for (let i = 0; i < testArrayCoppy.length; i++) {
       const item = testArrayCoppy[i];
       let result = isItemClick(startX,startY,item)
       if (result) {
+        //rewriting items array - set selected item  at the end array
+        let itemIndex= testArrayCoppy.findIndex(elem=>elem.id === item.id);
+        testArrayCoppy.splice(itemIndex,1)
+        testArrayCoppy.push(item)
+        let startCoordinate  ={
+          x:startX,
+          y:startY
+        }
+        dispatch(setStartMove(startCoordinate))
+        dispatch(setItemsAtCanvas(testArrayCoppy))
         dispatch(setIsDown(true))
         break; 
       }
@@ -113,7 +131,10 @@ function Canvas() {
     }
   }
 
-  const drawItems = (ctx, itemsArray) => {
+  const drawItems = (ctx,itemsArray) => {
+    console.log('drawItems')
+    
+    ctx.beginPath()
     itemsArray.forEach(item => {
       drawOneItem(ctx,item)
     });
@@ -121,10 +142,15 @@ function Canvas() {
 
   useEffect(()=>{
     const ctx = canvasRef.current.getContext('2d')
-    ctx.clearRect(0, 0, width, height)
+    ctx.clearRect(
+      0,
+      0,
+      canvasRef.current.clientWidth,
+      canvasRef.current.clientHeight
+    );
     ctx.beginPath()
-    drawItems(ctx,testArray)
-  },[itemToDrag])
+    drawItems(ctx,itemsAtCanvas)
+  },[itemsAtCanvas,itemToDrag])
 
   return (
     <div className="canvas_wrapper">

@@ -22,3 +22,9 @@ export const setItemsAtCanvas = data => {
     payload: data
   }
 }
+export const setStartMove = data => {
+  return {
+    type: 'SET_START_MOVE',
+    payload: data
+  }
+}
