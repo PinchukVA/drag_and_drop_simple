@@ -57,6 +57,7 @@ function Canvas() {
     let { offsetX, offsetY } = e.nativeEvent;
     let dx = null;
     let dy = null;
+    // Calculate the necessary center relative to the object capture and its transfer to the canvas
     if (styleItemToAddCopy === 'square'){
       dx = offsetX - itemToAddDXCopy.x
       dy = offsetY - itemToAddDXCopy.y
@@ -92,6 +93,7 @@ function Canvas() {
 
   const isItemClick = (x, y, item) => {
     let isTarget = false;
+    // Calculate whether the object was clicked or not, depending on the type of object
     if (item.style === 'circle') {
       let dx = item.x - x;
       let dy = item.y - y;
